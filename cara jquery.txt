@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Submit Form jQuery Ajax</title>
+    <script type="text/javascript" src="jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+
+  <body>
+    <div class="wrap">
+      <form method="post" action="proses.php">
+        <h2>Status</h2>
+        <textarea name="status" class="status" placeholder="Sedang memikirkan apa?"></textarea>
+        <button class="btn" type="submit">Kirim</button>
+      </form>
+
+      <script type="text/javascript">
+        $(function(){
+          $("form").submit(function(){
+            $.ajax({
+              url:$(this).attr("action"),
+              data:$(this).serialize(),
+              type:$(this).attr("method"),
+              dataType: 'html',
+              beforeSend: function() {
+                $("textarea").attr("disabled",true);
+                $("button").attr("disabled",true);
+              },
+              complete:function() {
+                $("textarea").attr("disabled",false);
+                $("button").attr("disabled",false);								
+              },
+              success:function(hasil) {
+                var txt = $("textarea");
+                if(txt.val().trim().length < 1) {
+                  alert("Status masih kosong");
+                }else{
+                  $("#data_status").after(hasil);
+                  $(".status-box").eq(0).hide().fadeIn();
+                  $("#data_status h1").remove();
+                  $("form")[0].reset();
+                  setTimeout(function(){
+                    $("textarea").focus();
+                  },1000);
+                }
+              }
+            })
+            return false;
+          });
+        });
+      </script>
+
+      <div id="data_status" class="data">
+        <h1>Tidak Ada Data Status</h1>
+      </div>
+
+      <!-- Data Status Akan Ditampilkan disini -->
+    </div>
+  </body>
+</html>h
